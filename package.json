@@ -1,0 +1,48 @@
+{
+  "name": "koa-jwt-example",
+  "version": "0.1.0",
+  "description": "Show how to implement jwt authentication with koa2 as web server. ",
+  "main": "src/index.js",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "koa": "^2.3.0",
+    "koa-jwt": "^3.2.2",
+    "koa-router": "^7.2.1",
+    "koa2-formidable": "^1.0.2",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.13.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "eslint": "^4.10.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-clean": "^0.3.2",
+    "gulp-eslint": "^4.0.0"
+  },
+  "scripts": {
+    "serve": "node dist/index.js",
+    "start:babel": "supervisor --watch src --exec babel-node src/index.js",
+    "start": "supervisor --watch src src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoeyAspire/koa-jwt-example.git"
+  },
+  "keywords": [
+    "koa2",
+    "mongoose",
+    "jwt",
+    "jsonwebtoken",
+    "koa-jwt",
+    "mongodb",
+    "example"
+  ],
+  "author": "JoeyAspire",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoeyAspire/koa-jwt-example/issues"
+  },
+  "homepage": "https://github.com/JoeyAspire/koa-jwt-example#readme"
+}
