@@ -6,7 +6,8 @@ module.exports = {
     
     /**
      * get payload from ctx.state
-     * @param {Object} ctx
+     * 
+     * @param {Object} ctx Koa's Context object
      * @return {String}
      */
     getPayload: function(ctx) {
@@ -24,12 +25,10 @@ module.exports = {
      *  3. plant token to cookie
      *  4. return token
      * 
-     * about params
-     *  `payload` is the payload based on which to calculate a token, if not provided, get it from koa's context `ctx`
      * 
-     * @param {Object} ctx
-     * @param {Object} payload
-     * @return {String}
+     * @param {Object} ctx Koa's Context object
+     * @param {Object} payload based on which to calculate a token, if not provided, get it from koa's context `ctx`
+     * @return {String} the token
      * 
      */
     setPayload: function(ctx, payload) {

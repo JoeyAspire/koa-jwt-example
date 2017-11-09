@@ -54,7 +54,7 @@ let connect = async function() {
 /**
  * make sure a connection to mongodb is available
  * 
- * @return {Object}
+ * @return {Object} mongoose.connection or null
  */
 let ensureConnected = async function() {
     if ( mongoose.connection 
