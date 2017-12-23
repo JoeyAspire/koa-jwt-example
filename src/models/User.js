@@ -28,7 +28,7 @@ methods.unameFmtErr = function() {
 }
 
 methods.unameInuse = async function() {
-    return await this.model('User').count({username: this.username}).exec();
+    return !!await this.model('User').count({username: this.username}).exec();
 }
 
 

@@ -18,15 +18,15 @@ const UserToBeSchema = mongoose.Schema(schema)
 
 let methods = UserToBeSchema.methods
 methods.emailInuse = async function() {
-    return !!await this.model('User')
-        .findOne({email: this.email})
+    return !!await this.model('UserToBe')
+        .count({email: this.email})
         .exec()
 }
 
 
 methods.unameInuse = async function() {
-    return !!await this.model('User')
-        .findOne({username: this.username})
+    return !!await this.model('UserToBe')
+        .count({username: this.username})
         .exec()
 }
 
