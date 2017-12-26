@@ -1,7 +1,7 @@
 module.exports = {
 
     /**
-     * maximum retrys before connection established
+     * maximum times of retry before connection established
      */
     retry: 4,
 

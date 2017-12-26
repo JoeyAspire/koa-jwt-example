@@ -100,7 +100,13 @@ let mapping = {
 
         USER_NOT_EXIST: {
             code: 23,
-            desp: 'uer not exist'
+            desp: 'user not exist'
+        },
+
+
+        SEND_EMAIL_ERR: {
+            code: 24,
+            desp: 'Failed to Send Email'
         }
     },
 

@@ -10,7 +10,9 @@
     "koa-router": "^7.2.1",
     "koa2-formidable": "^1.0.2",
     "lodash": "^4.17.4",
-    "mongoose": "^4.13.0"
+    "mongoose": "^4.13.0",
+    "nodemailer": "^4.4.1",
+    "urijs": "^1.19.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

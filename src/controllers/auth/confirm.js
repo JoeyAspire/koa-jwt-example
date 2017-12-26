@@ -27,18 +27,21 @@ async function confirm(ctx, next) {
         || (req.body && req.body.confirmId)
     
     
-    let user = await UserToBe.findOne({confirmId: confirmId})
+    let usertobe, user;
+    usertobe = await UserToBe.findOne({confirmId: confirmId})
                             .select(props).exec()
 
-    if ( !user ) {
+    if ( !usertobe ) {
         ctx.body = Object.assign({success: false}, ERRORS.CONFIRM_CODE_EXPIRED)
         return await next()
     }
 
-    user = _.pick(user, props)
+    user = _.pick(usertobe, props)
     user = new User(user)
     user = await user.save()
     if ( user && !user.errors ) {
+        // usertobe.remove()
+        await usertobe.remove()
         ctx.body = Object.assign({success: true}, ERRORS.SUCC)
     } else {
         ctx.body = Object.assign({success: false}, ERRORS.FAIL)

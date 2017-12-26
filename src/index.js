@@ -38,4 +38,4 @@ router.post('/auth/logout', controllers.auth.logout )
 
 app.use(router.routes())
 app.listen(conf.server.port)
-log('[app] listening on port 9999')
+log('[app] listening on port ',conf.server.port)

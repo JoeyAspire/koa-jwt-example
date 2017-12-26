@@ -5,7 +5,7 @@ schema = Object.assign(schema, {
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 10
+        expires: 24*60*60
     },
 
     confirmId: {

@@ -4,6 +4,7 @@ const UserToBe = require('../../models/UserToBe')
 const ERRORS = require('../../errors/')
 const bcrypt = require('bcrypt')
 const ensureConnected = require('../../common/ensureConnected')
+const sendmail = require('./_sendMail.js')
 
 
 async function register(ctx, next) {
@@ -12,10 +13,14 @@ async function register(ctx, next) {
         return await next()
     }
     
-    let {email, username, password} = ctx.request.body || {}
+    let {email, username, password, confirmUrl} = ctx.request.body || {}
     let user = new User({email, username, password})
     let userToBe = new UserToBe({email, username, password})
 
+    if ( !confirmUrl ) {
+        ctx.body = Object.assign({success: false}, ERRORS.LACK_PARAMS)
+        return await next();
+    }
 
     if ( !email || !password ) {
         ctx.body = Object.assign({success: false}, ERRORS.LACK_PARAMS)
@@ -57,7 +62,14 @@ async function register(ctx, next) {
 
     userToBe = await userToBe.save();
     if ( userToBe ) {
-        ctx.body = Object.assign({success: true, confirmId: userToBe.confirmId}, ERRORS.SUCC);
+        let result = await sendmail(ctx, userToBe);
+        if ( result.err ) {
+            userToBe.remove(); // if fail to send email, remove usertobe
+            ctx.body = Object.assign({success: false}, ERRORS.SEND_EMAIL_ERR);
+        } else {
+            ctx.body = Object.assign({success: true}, ERRORS.SUCC);
+        }
+        
     } else {
         ctx.body = Object.assign({success: false}, ERRORS.FAIL);
     }
