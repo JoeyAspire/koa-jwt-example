@@ -1,10 +1,18 @@
+const fs = require('fs')
+const path = require('path')
 const mongoose = require('mongoose')
 const User = require('../../models/User')
 const UserToBe = require('../../models/UserToBe')
 const ERRORS = require('../../errors/')
 const bcrypt = require('bcrypt')
 const ensureConnected = require('../../common/ensureConnected')
-const sendmail = require('./_sendMail.js')
+// const sendmail = require('./_sendMail.js')
+const mailconf = require('../../config/email')
+
+
+
+
+
 
 
 async function register(ctx, next) {
@@ -62,7 +70,10 @@ async function register(ctx, next) {
 
     userToBe = await userToBe.save();
     if ( userToBe ) {
-        let result = await sendmail(ctx, userToBe);
+        let messenger = mailconf.messenger;
+        let msgpath = path.resolve(__dirname, 'messengers', mailconf.messenger + '.js');
+        let sendmail = require(msgpath);
+        let result = await sendmail(ctx, userToBe, mailconf);
         if ( result.err ) {
             userToBe.remove(); // if fail to send email, remove usertobe
             ctx.body = Object.assign({success: false}, ERRORS.SEND_EMAIL_ERR);

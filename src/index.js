@@ -1,3 +1,5 @@
+const https = require('https')
+const fs = require('fs')
 const Koa = require('koa')
 const formidable = require('koa2-formidable')
 const router = require('koa-router')()
@@ -30,12 +32,18 @@ router.post('/auth/register', controllers.auth.register )
 router.post('/auth/confirm', controllers.auth.confirm )
 router.get('/auth/confirm', controllers.auth.confirm )
 router.post('/auth/login', controllers.auth.login )
-router.post('/auth/keepalive', controllers.auth.login )
+router.post('/auth/keepalive', controllers.auth.keepalive )
 router.post('/auth/logout', controllers.auth.logout )
 
 
 
 
 app.use(router.routes())
-app.listen(conf.server.port)
+let options = {
+    key: fs.readFileSync('./ssl/server-key.pem'),
+    cert: fs.readFileSync('./ssl/server-cert.pem')
+}
+https.createServer(options, app.callback()).listen(conf.server.port)
+
+// app.listen(conf.server.port)
 log('[app] listening on port ',conf.server.port)

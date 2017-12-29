@@ -34,6 +34,10 @@ module.exports = {
     setPayload: function(ctx, payload) {
         payload = payload || this.getPayload()
         payload[conf.randProp] = uuid()
+        if ( payload.iat && payload.exp ) {
+            delete payload.iat
+            delete payload.exp
+        }
         let token = jwt.sign(payload, conf.secret, conf.encodeOpts)
         ctx.cookies.set(conf.cookie, token, {maxAge: conf.maxAge})
         return token
@@ -43,8 +47,12 @@ module.exports = {
         let token = ""
         ctx.cookies.set(conf.cookie, token)
         return token
+    },
+
+
+    refreshPayload: function(ctx) {
+        let payload = this.getPayload(ctx);
+        let token = this.setPayload(ctx,payload);
+        return token;
     }
-
 }
-
-module.exports.refreshPayload = module.exports.setPayload

@@ -32,10 +32,8 @@ async function login(ctx, next) {
     }
 
     if ( bcrypt.compareSync(password, user.password) ) {
-        
-        user = _.pick(user, ['username', 'isAdmin'])
+        user = await user.getCookieObj();
         let tk = token.setPayload(ctx, user)
-
         ctx.body = Object.assign({success: true, token: tk}, ERRORS.SUCC)
     } else {
         ctx.body = Object.assign({success: true}, ERRORS.WRONG_PASS)

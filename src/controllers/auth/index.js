@@ -1,3 +1,5 @@
+
+
 module.exports = {
     register: require('./register'),
     confirm: require('./confirm'),

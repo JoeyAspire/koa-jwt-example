@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const _ = require('lodash')
 const connection = mongoose.connection;
 
 
@@ -29,6 +30,15 @@ methods.unameFmtErr = function() {
 
 methods.unameInuse = async function() {
     return !!await this.model('User').count({username: this.username}).exec();
+}
+
+// fetch user info that can be planted into cookie
+// can customize this method
+methods.getCookieObj = async function() {
+    let user = this;
+    return new Promise(function(resolve, reject) {
+        resolve(_.pick(user, ['username', 'isAdmin']))
+    })
 }
 
 

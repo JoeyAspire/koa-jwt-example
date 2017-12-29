@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer')
 const URI = require('urijs')
+const _ = require('lodash')
 
-async function _send_mail(ctx, userToBe) {
+async function _send_mail(ctx, userToBe, conf) {
 
     return new Promise(function(resolve, reject) {
         let uri;
@@ -29,30 +30,35 @@ async function _send_mail(ctx, userToBe) {
             port: 465,
             auth: {
                 type: 'login',
-                user: '742641156@qq.com',
-                pass: 'put your code here' // qq comfirmation code
+                user: conf.user,
+                pass: conf.pass // 此处需要传 qq 的确认码
             },
             secure: true
         }
 
 
         let sharedContent = {
-            from: 'who am i <742641156@qq.com>'
+            from: conf.from
         }
 
 
 
 
-        console.log(JSON.stringify(uri, null, '\t'));
+        // console.log(JSON.stringify(uri, null, '\t'));
 
         let content = {
             to: userToBe.email,
-            subject: 'Confirm Your Registration At Our Site',
-            html: `Dear ${userToBe.email || userToBe.username}:<br />
-                please click the following url to finish your registration at site 'xxx.xxx.com'<br />
-                <a href="${uri.toString()}">${uri.toString()}</a>
-            `
+            subject: conf.subject,
+            html: _.template(conf.html)({
+                userToBe: userToBe, 
+                url: uri.toString()
+            })
         }
+
+        //     html: `Dear ${userToBe.email || userToBe.username}:<br />
+        //     please click the following url to finish your registration at site 'xxx.xxx.com'<br />
+        //     <a href="${uri.toString()}">${uri.toString()}</a>
+        // `
 
 
         let transporter = nodemailer.createTransport(generalOptions, sharedContent);

@@ -1,11 +1,13 @@
 const mongoose = require('mongoose')
+const usertobeConf = require('../config/usertobe.js')
+
 let schema = require('./_userSchema')
 
 schema = Object.assign(schema, {
     createdAt: {
         type: Date,
         default: Date.now,
-        expires: 24*60*60
+        expires: usertobeConf.expires
     },
 
     confirmId: {
