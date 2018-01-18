@@ -39,11 +39,17 @@ router.post('/auth/logout', controllers.auth.logout )
 
 
 app.use(router.routes())
-let options = {
-    key: fs.readFileSync('./ssl/server-key.pem'),
-    cert: fs.readFileSync('./ssl/server-cert.pem')
+
+if ( conf.server.https ) {
+    let options = {
+        key: fs.readFileSync('./ssl/server-key.pem'),
+        cert: fs.readFileSync('./ssl/server-cert.pem')
+    }
+    https.createServer(options, app.callback()).listen(conf.server.port)
+
+} else {
+    app.listen(conf.server.port)
 }
-https.createServer(options, app.callback()).listen(conf.server.port)
 
 // app.listen(conf.server.port)
 log('[app] listening on port ',conf.server.port)

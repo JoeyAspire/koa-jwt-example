@@ -7,7 +7,7 @@ const ERRORS = require('../../errors/')
 const bcrypt = require('bcrypt')
 const ensureConnected = require('../../common/ensureConnected')
 // const sendmail = require('./_sendMail.js')
-const mailconf = require('../../config/email')
+const mailConf = require('../../config/email')
 
 
 
@@ -21,14 +21,17 @@ async function register(ctx, next) {
         return await next()
     }
     
-    let {email, username, password, confirmUrl} = ctx.request.body || {}
+    let {confirmUrl, confirmurl} = ctx.request.headers;
+    let {email, username, password} = ctx.request.body || {}
     let user = new User({email, username, password})
     let userToBe = new UserToBe({email, username, password})
 
-    if ( !confirmUrl ) {
+    if ( !(confirmUrl || confirmurl) ) {
         ctx.body = Object.assign({success: false}, ERRORS.LACK_PARAMS)
         return await next();
     }
+
+    confirmUrl = confirmUrl || confirmurl;
 
     if ( !email || !password ) {
         ctx.body = Object.assign({success: false}, ERRORS.LACK_PARAMS)
@@ -70,10 +73,10 @@ async function register(ctx, next) {
 
     userToBe = await userToBe.save();
     if ( userToBe ) {
-        let messenger = mailconf.messenger;
-        let msgpath = path.resolve(__dirname, 'messengers', mailconf.messenger + '.js');
+        let messenger = mailConf.messenger;
+        let msgpath = path.resolve(__dirname, 'messengers', mailConf.messenger + '.js');
         let sendmail = require(msgpath);
-        let result = await sendmail(ctx, userToBe, mailconf);
+        let result = await sendmail({ctx, userToBe, mailConf, confirmUrl});
         if ( result.err ) {
             userToBe.remove(); // if fail to send email, remove usertobe
             ctx.body = Object.assign({success: false}, ERRORS.SEND_EMAIL_ERR);

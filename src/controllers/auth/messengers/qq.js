@@ -2,13 +2,14 @@ const nodemailer = require('nodemailer')
 const URI = require('urijs')
 const _ = require('lodash')
 
-async function _send_mail(ctx, userToBe, conf) {
+async function _send_mail({ctx, userToBe, mailConf, confirmUrl}) {
 
+    // ctx, userToBe, conf
     return new Promise(function(resolve, reject) {
         let uri;
 
         try {
-            uri = ctx.request.body.confirmUrl;
+            uri = confirmUrl || "";
             uri = new URI(uri)
             uri.addQuery('confirmId', userToBe.confirmId);
         } catch (e) {
@@ -30,15 +31,15 @@ async function _send_mail(ctx, userToBe, conf) {
             port: 465,
             auth: {
                 type: 'login',
-                user: conf.user,
-                pass: conf.pass // 此处需要传 qq 的确认码
+                user: mailConf.user,
+                pass: mailConf.pass // 此处需要传 qq 的确认码
             },
             secure: true
         }
 
 
         let sharedContent = {
-            from: conf.from
+            from: mailConf.from
         }
 
 
@@ -48,8 +49,8 @@ async function _send_mail(ctx, userToBe, conf) {
 
         let content = {
             to: userToBe.email,
-            subject: conf.subject,
-            html: _.template(conf.html)({
+            subject: mailConf.subject,
+            html: _.template(mailConf.html)({
                 userToBe: userToBe, 
                 url: uri.toString()
             })
@@ -64,16 +65,8 @@ async function _send_mail(ctx, userToBe, conf) {
         let transporter = nodemailer.createTransport(generalOptions, sharedContent);
         
         transporter.sendMail(content, function(err, info) {
-            
-            if ( err ) {
-                resolve({err, info});
-            } else {
-                resolve({err, info});
-            }
-
-
+            resolve({err, info});
             transporter.close();
-
         })
 
     })
